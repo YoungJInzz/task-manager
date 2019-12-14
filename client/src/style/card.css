@@ -1,0 +1,4 @@
+.cards:hover {
+  background-color: tomato;
+  cursor: pointer;
+}

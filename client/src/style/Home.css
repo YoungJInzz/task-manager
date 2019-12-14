@@ -1,0 +1,30 @@
+@font-face {
+    font-family: 'Leckerli One';
+  
+    src: url("../font/LeckerliOne-Regular.ttf") format("truetype");
+  }
+
+
+
+.button{
+    margin-top:4%;
+    margin-right:10%;
+    
+}
+
+.back{
+   background-color:rgba(224, 224, 224, 1);
+    padding-bottom: 3%;
+    
+}
+
+.letter{
+     font-weight: 900
+     
+ }
+
+ .addCard{
+    background-color: black
+    }
+
+
