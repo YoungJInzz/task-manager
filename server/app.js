@@ -1,12 +1,22 @@
+var csrf = require('csurf')
+const bodyParser = require("body-parser");
 const express = require("express");
+var cookieParser = require('cookie-parser')
+var session = require('express-session')
 const cors = require("cors");
 const morgan = require("morgan");
-const bodyParser = require("body-parser");
 const router = require("./router/index.js");
 const app = express();
 const mongoose = require("mongoose");
 const port = 3000;
 const db = mongoose.connection;
+app.use(cookieParser())
+
+app.use(session({
+  secret: 'keyboard cat'   
+ }))
+// app.use(cookie('keyboard cat'));
+// app.use(csrf());
 
 db.on("error", console.error);
 db.once("open", function() {
@@ -16,7 +26,7 @@ require("dotenv").config();
 mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://localhost/mongodb_tutorial");
 
-app.use(cors({ credentials: true, origin: "*" }));
+app.use(cors({ origin: "http://localhost:9000", credentials: true })); 
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use("/", router);

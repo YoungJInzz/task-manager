@@ -1,4 +1,7 @@
+var csrf = require("csurf");
+var bodyParser = require("body-parser");
 const express = require("express");
+var session = require("express-session");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const encryption = require("../middleware/crypto");
@@ -8,6 +11,14 @@ const card = require("../models/card");
 const list = require("../models/list");
 const trello = require("../models/trello");
 const userInfo = require("../models/userInfo");
+
+// var parseJson = bodyParser.json();
+// var parseUrlencoded = bodyParser.urlencoded();
+// var parseBody = [parseJson, parseUrlencoded]
+// var csrfProtection = csrf({ cookie: true })
+var parseForm = bodyParser.urlencoded({ extended: false })
+
+var csrfProtection = csrf()
 require("dotenv").config();
 
 // test api
@@ -29,7 +40,16 @@ router.get("/getAlltrello", function(req, res) {
 router.get("/board", function(req, res) {
   console.log(req.query.color);
 });
+
+router.post("/process", parseForm, csrfProtection, function(req, res) {
+  res.send("data is being processed");
+});
+
 // test api
+router.get("/getCSRF", csrfProtection, function(req, res) {
+  res.cookie("XSRF-TOKEN", req.csrfToken());
+  res.json({ "XSRF-TOKEN": req.csrfToken() });
+});
 
 router.post("/signUp", function(req, res) {
   console.log(req.body);
@@ -87,12 +107,11 @@ router.post("/signIn", function(req, res) {
   });
 });
 
-router.get("/getuser",async function(req,res){
+router.get("/getuser", async function(req, res) {
   let id = decodeJWT(req.headers["x-access-token"]).id;
-  let user= await userInfo.findOne({userName:id})
-  res.send(user)
-})
-
+  let user = await userInfo.findOne({ userName: id });
+  res.send(user);
+});
 
 router.post("/updatePassword", async function(req, res) {
   let id = decodeJWT(req.headers["x-access-token"]).id;
@@ -100,7 +119,7 @@ router.post("/updatePassword", async function(req, res) {
     { userName: id },
     { $set: { password: encryption(req.body.password) } }
   );
-  res.send({"isPasswordChange":"success"})
+  res.send({ isPasswordChange: "success" });
 });
 
 router.get("/boards", async function(req, res) {
@@ -116,7 +135,7 @@ router.get("/boards", async function(req, res) {
   res.send(boardData);
 });
 
-router.post("/getboard", async function(req, res) {
+router.post("/getboard", parseForm, async function(req, res) {
   let id = decodeJWT(req.headers["x-access-token"]).id;
   let boardData = await trello.findOne(
     { userName: id, "board._id": req.body.boardId },
@@ -125,7 +144,8 @@ router.post("/getboard", async function(req, res) {
   res.send(boardData.board);
 });
 
-router.post("/addBoard", function(req, res) {
+router.post("/addBoard",parseForm, function(req, res) {
+  console.log(req.headers)
   let id = decodeJWT(req.headers["x-access-token"]).id;
   let newBoard = new board();
   newBoard.title = req.body.title;
@@ -235,7 +255,6 @@ router.post("/updateCard", function(req, res) {
     )
     .then(() => res.send("cardUpdate"));
 });
-
 
 router.post("/deleteCard", function(req, res) {
   let id = decodeJWT(req.headers["x-access-token"]).id;
