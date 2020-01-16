@@ -11,26 +11,32 @@ class Navbar2 extends Component {
     }
     signout(){
         Cookies.remove('token')
+        Cookies.remove('XSRF-TOKEN')
+        Cookies.remove('_csrf')
         this.props.history.push('/')   }
 
   render() {
     return (
       <div>
         <Row className="nav">
-          <Col className="nav-title" xs={2}>
+          <Col className="nav-title" xs={2}  >
           <h1>task manager</h1>
           </Col>
-          <Col className="button-wrapper" xs="1" xs={{ size: 3, offset: 7 }}>
+          <Col className="button-wrapper" xs={{ size: 1, offset: 7 }} xs={{ size: 1, offset: 7 }}>
           <Link to="/board">
-            <Button className="button" size="lg">board</Button>
+            <Button className="button"  size="lg" block>board</Button>
             </Link>
+            </Col>
+            <Col className="button-wrapper" xs={{ size: 1 }} xs={{ size: 1 }}>
              <Link to="/mypage">
-            <Button className="button" size="lg">mypage</Button>
+            <Button className="button" size="lg" block >mypage</Button>
             </Link>
-              <Button onClick ={this.signout}className="button" size="lg">
+            </Col>
+            <Col className="button-wrapper" xs={{ size: 1 }} xs={{ size: 1 }}>
+              <Button onClick ={this.signout}className="button" size="lg" block>
                 logout
               </Button>
-          </Col>
+              </Col>
         </Row>
       </div>
     );

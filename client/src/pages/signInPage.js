@@ -28,8 +28,18 @@ class SignInPage extends Component {
   async handleSignin() {
     const email = document.getElementById("exampleEmail").value;
     const password = document.getElementById("examplePassword").value;
+    const token = await fetch(`http://${process.env.url}:3000/getCSRF`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+    let x = await token.json()
+    console.log(x);
     const response = await fetch(`http://${process.env.url}:3000/signIn`, {
       method: "POST",
+      // credentials: 'include',
       body: JSON.stringify({ userName: email, password: password }),
       headers: {
         "Content-Type": "application/json"
@@ -42,15 +52,14 @@ class SignInPage extends Component {
       alert("잘못된 비밀번호입니다.");
     } else if (data.isId === "true") {
       Cookies.set("token", data.token, { expires: 1, path: "/" });
-      this.props.history.push('/board')
+      this.props.history.push("/board");
     }
-   
   }
   render() {
     return (
       <div>
         <Container>
-          <Row className="signUpRow1"></Row>
+          <Row className="Row1"></Row>
           <Col
             className="singUp-containter"
             xs="10"
@@ -63,7 +72,7 @@ class SignInPage extends Component {
             <Form>
               <FormGroup row>
                 <Label for="exampleEmail" sm={4}>
-                  Email
+                  ID
                 </Label>
                 <Col sm={7}>
                   <Input
@@ -71,7 +80,7 @@ class SignInPage extends Component {
                     type="email"
                     name="email"
                     id="exampleEmail"
-                    placeholder="email"
+                    placeholder="ID"
                   />
                 </Col>
               </FormGroup>
@@ -111,7 +120,6 @@ class SignInPage extends Component {
         </Modal> */}
         {Cookies.get("token") !== undefined && <Redirect to="/board" />}
       </div>
-      
     );
   }
 }

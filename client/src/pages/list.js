@@ -50,7 +50,7 @@ class List extends Component {
 
   async handleChangeTitle() {
     const title = await document.getElementById("listTitle").value;
-    const response = await fetch(`http://localhost:3000/updateList`, {
+    const response = await fetch(`http://${process.env.url}:3000/updateList`, {
       method: "POST",
       body: JSON.stringify({
         title: title,
@@ -69,7 +69,7 @@ class List extends Component {
   async addCard() {
     const title = await document.getElementById("cardContent").value;
     console.log(title)
-    const response = await fetch(`http://localhost:3000/addCard`, {
+    const response = await fetch(`http://${process.env.url}:3000/addCard`, {
       method: "POST",
       body: JSON.stringify({
         content: title,
@@ -142,14 +142,15 @@ class List extends Component {
             ))}
           </Col>
           <Row>
-            <Col xs="1" xs={{ size: 6, offset: 1 }}>
+            <Col xs="1" xs={{ size: 6, offset: 7 }} xs={{ size: 6, offset: 7 }} >
               {" "}
-              <button
+              <Button
+              color="primary"
                 onClick={this.addCardModalToggle}
-                xs={{ size: 12, offset: 2 }}
+                xs={{ size: 12, offset: 2 }} xs={{ size: 12, offset: 2 }}
               >
                 +Add a card
-              </button>
+              </Button>
             </Col>
           </Row>
         </Card>

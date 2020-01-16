@@ -56,9 +56,12 @@ class BoardList extends Component {
     const response = await fetch(`http://${process.env.url}:3000/addBoard`, {
       method: "POST",
       body: JSON.stringify({ title: title }),
+      credentials: "include",
       headers: {
         "x-access-token": `${Cookies.get("token")}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "x-csrf-token": `${Cookies.get("XSRF-TOKEN")}`,
+        // "_csrf":`${Cookies.get("_csrf")}`,
       }
     });
     this.toggle();
