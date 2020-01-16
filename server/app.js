@@ -26,7 +26,7 @@ require("dotenv").config();
 mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://localhost/mongodb_tutorial");
 
-app.use(cors({ origin: "http://task-manager-ver1.1.s3-website.ap-northeast-2.amazonaws.com/", credentials: true })); 
+app.use(cors({ origin: "http://task-manager-ver1.1.s3-website.ap-northeast-2.amazonaws.com", credentials: true })); 
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use("/", router);
